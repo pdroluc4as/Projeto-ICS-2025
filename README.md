@@ -1,7 +1,7 @@
 # Projeto ICS 2025 - IFRN
 
 
-#Integrantes:
+# Integrantes:
 ## Pedro Davi
 ## Pedro Lucas
 ## Tales de Souza
