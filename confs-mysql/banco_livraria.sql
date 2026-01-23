@@ -89,7 +89,7 @@ CREATE TABLE `livros` (
   PRIMARY KEY (`id`),
   KEY `autor_id` (`autor_id`),
   CONSTRAINT `livros_ibfk_1` FOREIGN KEY (`autor_id`) REFERENCES `autor` (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_uca1400_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_uca1400_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -99,6 +99,8 @@ CREATE TABLE `livros` (
 LOCK TABLES `livros` WRITE;
 /*!40000 ALTER TABLE `livros` DISABLE KEYS */;
 set autocommit=0;
+INSERT INTO `livros` VALUES
+(1,'livro teste','asafdasfasf',3);
 /*!40000 ALTER TABLE `livros` ENABLE KEYS */;
 UNLOCK TABLES;
 commit;
@@ -127,6 +129,9 @@ CREATE TABLE `livros_generos` (
 LOCK TABLES `livros_generos` WRITE;
 /*!40000 ALTER TABLE `livros_generos` DISABLE KEYS */;
 set autocommit=0;
+INSERT INTO `livros_generos` VALUES
+(1,1),
+(1,5);
 /*!40000 ALTER TABLE `livros_generos` ENABLE KEYS */;
 UNLOCK TABLES;
 commit;
@@ -140,4 +145,4 @@ commit;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*M!100616 SET NOTE_VERBOSITY=@OLD_NOTE_VERBOSITY */;
 
--- Dump completed on 2026-01-23  4:04:17
+-- Dump completed on 2026-01-23 19:12:50
