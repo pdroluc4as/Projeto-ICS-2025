@@ -1,42 +1,67 @@
 <?php
-
 include('conexao.php');
 
-$sql = "SELECT livros.titulo as titulo_do_livro, autor.nome as autor_nome, genero.nome as genero_principal
-	FROM livros
-	JOIN autor ON livros.autor_id = autor.id
-	LEFT JOIN livros_generos ON livros.id = livros_generos.livro_id
-	LEFT JOIN genero ON livros_generos.genero_id = genero.id
-	GROUP BY livros.id";
+// SQL ajustada para trazer os gêneros agrupados e evitar erros
+$sql = "SELECT 
+            livros.titulo as titulo_do_livro, 
+            autor.nome as autor_nome, 
+            IFNULL(GROUP_CONCAT(genero.nome SEPARATOR ', '), 'Sem Gênero') as lista_generos
+        FROM livros
+        JOIN autor ON livros.autor_id = autor.id
+        LEFT JOIN livros_generos ON livros.id = livros_generos.livro_id
+        LEFT JOIN genero ON livros_generos.genero_id = genero.id
+        GROUP BY livros.id";
 
-$resultado = $conexao->query($sql);
-
+// Executa a query no estilo procedural (compatível com teu conexao.php)
+$resultado = mysqli_query($conexao, $sql);
 ?>
-<html>
-	<head><title>Livraria</title></head>
 
-	<body>
-		<h1>Livros Disponiveis</h1>
-		<table>
-			<thead border="1">
-				<tr>
-					<th>Titulo do Livro</th>
-					<th>Autor</th>
-					<th>Genero</th>
-				</tr>
-			</thead>
-	
-			<tbody>
-				<?php
-				while($linha = $resultado->fetch_assoc()) {
-					echo "<tr>";
-					echo "<td>" . $linha['titulo'] . "</td>";
-					echo "<td>" . $linha['autor_nome'] . "</td>";
-					echo "<td>" . $linha['genero_principal'] . "</td>";
-					echo "</tr>";
-				}
-				?>
-			</tbody>
-		</table>
-	</body>
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <title>Livraria - Lista de Livros</title>
+    <link href="/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body class="bg-light"> <div class="container mt-5">
+        
+        <div class="card shadow-sm">
+            <div class="card-header bg-primary text-white">
+                <h2 class="mb-0 text-center">📚 Livros Disponíveis</h2>
+            </div>
+            
+            <div class="card-body">
+
+                <div class="table-responsive">
+                    <table class="table table-striped table-hover table-bordered">
+                        <thead class="table-dark">
+                            <tr>
+                                <th>Título do Livro</th>
+                                <th>Autor</th>
+                                <th>Gêneros</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <?php
+                            // Loop no estilo procedural
+                            while($linha = mysqli_fetch_assoc($resultado)) {
+                                echo "<tr>";
+                                echo "<td class='fw-bold'>" . $linha['titulo_do_livro'] . "</td>";
+                                echo "<td>" . $linha['autor_nome'] . "</td>";
+                                
+                                // Badge (etiqueta) para os gêneros ficarem bonitos
+                                echo "<td><span class='badge bg-secondary'>" . $linha['lista_generos'] . "</span></td>";
+                                echo "</tr>";
+                            }
+                            ?>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <script src="/js/bootstrap.bundle.min.js"></script>
+</body>
 </html>

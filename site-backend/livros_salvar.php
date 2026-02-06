@@ -20,7 +20,7 @@ if ($id == "") {
     $sql = "UPDATE livros SET titulo = '$titulo', descricao = '$descricao', autor_id = '$autor_id' WHERE id = $id";
     mysqli_query($conexao, $sql);
     
-.
+
     $livro_id = $id; 
 }
 

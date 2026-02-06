@@ -12,4 +12,6 @@ if ($conexao->connect_errno) {
 	exit;
 }
 
+
+mysqli_set_charset($conexao, "utf8mb4");
 ?>

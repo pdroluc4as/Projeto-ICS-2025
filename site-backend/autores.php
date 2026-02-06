@@ -1,44 +1,88 @@
 <?php
+// Força o envio em UTF-8 para o navegador
+header('Content-Type: text/html; charset=utf-8');
+
 include('conexao.php');
+
+// Consulta SQL (Ajustei para 'autores' no plural, confere se é isso mesmo no banco)
+$sql = "SELECT * FROM autor";
+$resultado = mysqli_query($conexao, $sql);
 ?>
 
-<html>
-	<head><title>Gerenciar autores</title></head>
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gerenciar Autores</title>
+    
+    <link href="css/bootstrap.min.css" rel="stylesheet">
+</head>
 
-	<body>
-		<h1>Lista de autores</h1>
+<body class="bg-light">
 
-		<a href="autores_form.php">Novo Autor</a>
-		<a href="index.php">Voltar ao menu</a>
+    <div class="container mt-5">
+        
+        <div class="card shadow-sm">
+            
+            <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center">
+                <h3 class="mb-0">✍️ Lista de Autores</h3>
+                
+                <a href="index.php" class="btn btn-outline-light btn-sm">
+                    ⬅ Voltar ao Menu
+                </a>
+            </div>
 
-		<table>
-			<thead>
-				<tr>
-				<th>ID</th>
-				<th>Nome</th>
-				<th>ações</th>
-				</tr>
-			</thead>
-			<tbody>
-				<?php
-				$sql = "SELECT * FROM autor";
-				$resultado = $conexao->query($sql);
+            <div class="card-body">
+                
+                <div class="mb-3 text-end">
+                    <a href="autores_form.php" class="btn btn-success">
+                        + Novo Autor
+                    </a>
+                </div>
 
-				while($row = $resultado->fetch_assoc()) {
-					echo "<tr>";
-					echo "<td>" . $row['id'] . "</td>";
-					echo "<td>" . $row['nome'] . "</td>";
-					echo "<td>";
-					echo "<a href='autores_form.php?id=" . $row['id']. "' >Editar</a>";
+                <div class="table-responsive">
+                    <table class="table table-striped table-hover table-bordered align-middle">
+                        <thead class="table-dark">
+                            <tr>
+                                <th style="width: 10%;">ID</th>
+                                <th>Nome do Autor</th>
+                                <th style="width: 20%; text-align: center;">Ações</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <?php
+                            // Se houver resultados, mostra a lista
+                            if(mysqli_num_rows($resultado) > 0){
+                                while($row = mysqli_fetch_assoc($resultado)) {
+                                    echo "<tr>";
+                                    echo "<td>" . $row['id'] . "</td>";
+                                    
+                                    // Nome em negrito para destaque
+                                    echo "<td class='fw-bold'>" . $row['nome'] . "</td>";
+                                    
+                                    echo "<td class='text-center'>";
+                                    
+                                    // Botão Editar (Amarelo)
+                                    echo "<a href='autores_form.php?id=" . $row['id']. "' class='btn btn-warning btn-sm me-2'>Editar</a>";
 
-					echo "<a href='autores_excluir.php?id=" . $row['id'] . "'onclick='return confirm(\"tem certeza?\")'>Excluir</a>";
-					echo "</td>";
-					echo "</tr>";
-				}
+                                    // Botão Excluir (Vermelho)
+                                    echo "<a href='autores_excluir.php?id=" . $row['id'] . "' class='btn btn-danger btn-sm' onclick='return confirm(\"Tem certeza que deseja excluir este autor?\")'>Excluir</a>";
+                                    
+                                    echo "</td>";
+                                    echo "</tr>";
+                                }
+                            } else {
+                                // Se não tiver autores cadastrados
+                                echo "<tr><td colspan='3' class='text-center text-muted py-3'>Nenhum autor encontrado. Cadastre o primeiro!</td></tr>";
+                            }
+                            ?>
+                        </tbody>
+                    </table>
+                </div> </div>
+        </div>
+    </div>
 
-				?>
-			</tbody>
-		</table>
-
-	</body>
+    <script src="js/bootstrap.bundle.min.js"></script>
+</body>
 </html>

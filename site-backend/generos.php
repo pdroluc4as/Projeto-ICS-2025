@@ -1,44 +1,90 @@
 <?php
+
+header('Content-Type: text/html; charset=utf-8');
+
 include('conexao.php');
 ?>
 
-<html>
-	<head><title>Gerenciar generos</title></head>
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gerenciar Gêneros</title>
+    
+    <link href="css/bootstrap.min.css" rel="stylesheet">
+</head>
 
-	<body>
-		<h1>Lista de generos</h1>
+<body class="bg-light">
 
-		<a href="generos_form.php">Novo Genero</a>
-		<a href="index.php">Voltar ao menu</a>
+    <div class="container mt-5">
+        
+        <div class="card shadow-sm">
+            
+            <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center">
+                <h3 class="mb-0">🏷️ Lista de Gêneros</h3>
+                
+                <a href="index.php" class="btn btn-outline-light btn-sm">
+                    ⬅ Voltar ao Menu
+                </a>
+            </div>
 
-		<table>
-			<thead>
-				<tr>
-				<th>ID</th>
-				<th>Nome</th>
-				<th>ações</th>
-				</tr>
-			</thead>
-			<tbody>
-				<?php
-				$sql = "SELECT * FROM genero";
-				$resultado = $conexao->query($sql);
+            <div class="card-body">
+                
+                <div class="mb-3 text-end">
+                    <a href="generos_form.php" class="btn btn-success">
+                        + Novo Gênero
+                    </a>
+                </div>
 
-				while($row = $resultado->fetch_assoc()) {
-					echo "<tr>";
-					echo "<td>" . $row['id'] . "</td>";
-					echo "<td>" . $row['nome'] . "</td>";
-					echo "<td>";
-					echo "<a href='generos_form.php?id=" . $row['id']. "' >Editar</a>";
+                <div class="table-responsive">
+                    <table class="table table-striped table-hover table-bordered align-middle">
+                        <thead class="table-dark">
+                            <tr>
+                                <th style="width: 10%;">ID</th>
+                                <th>Nome do Gênero</th>
+                                <th style="width: 20%; text-align: center;">Ações</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <?php
+                            
+                            $sql = "SELECT * FROM genero";
+                            
+                            
+                            $resultado = mysqli_query($conexao, $sql);
 
-					echo "<a href='generos_excluir.php?id=" . $row['id'] . "'onclick='return confirm(\"tem certeza?\")'>Excluir</a>";
-					echo "</td>";
-					echo "</tr>";
-				}
+                            if(mysqli_num_rows($resultado) > 0){
+                                while($row = mysqli_fetch_assoc($resultado)) {
+                                    echo "<tr>";
+                                    echo "<td>" . $row['id'] . "</td>";
+                                    
+                                    // Destaque no nome
+                                    echo "<td class='fw-bold'>" . $row['nome'] . "</td>";
+                                    
+                                    echo "<td class='text-center'>";
+                                    
+                                    // Botão Editar (Amarelo)
+                                    echo "<a href='generos_form.php?id=" . $row['id']. "' class='btn btn-warning btn-sm me-2'>Editar</a>";
 
-				?>
-			</tbody>
-		</table>
+                                    // Botão Excluir (Vermelho)
+                                    echo "<a href='generos_excluir.php?id=" . $row['id'] . "' class='btn btn-danger btn-sm' onclick='return confirm(\"Tem certeza que deseja excluir este gênero?\")'>Excluir</a>";
+                                    
+                                    echo "</td>";
+                                    echo "</tr>";
+                                }
+                            } else {
+                                echo "<tr><td colspan='3' class='text-center text-muted py-3'>Nenhum gênero cadastrado.</td></tr>";
+                            }
+                            ?>
+                        </tbody>
+                    </table>
+                </div>
+            
+            </div>
+        </div>
+    </div>
 
-	</body>
+    <script src="js/bootstrap.bundle.min.js"></script>
+</body>
 </html>
